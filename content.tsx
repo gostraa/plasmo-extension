@@ -1,30 +1,30 @@
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react";
+import { sendToBackground } from "@plasmohq/messaging";
 
-import { sendToBackground } from "@plasmohq/messaging"
-
-const CustomButton = () => {
-  const [count, setCount] = useState(0)
+const Content: React.FC = () => {
+  const [count, setCount] = useState<number>(0);
 
   useEffect(() => {
     sendToBackground({
-      name: "getCounterValue"
+      name: "getCounterValue",
     }).then((response) => {
-      setCount(response.counter)
-    })
+      setCount(response.counter);
+    });
+
     chrome.runtime.onMessage.addListener((message) => {
       if (message.name === "counterUpdated") {
-        setCount(message.counter)
+        setCount(message.counter);
       }
-    })
-  }, [])
+    });
+  }, []);
 
   const handleIncrement = () => {
     sendToBackground({
-      name: "increment"
+      name: "increment",
     }).then((response) => {
-      setCount(response.counter)
-    })
-  }
+      setCount(response.counter);
+    });
+  };
 
   return (
     <div style={{ backgroundColor: "azure" }}>
@@ -33,7 +33,7 @@ const CustomButton = () => {
       </p>
       <button onClick={handleIncrement}>Increment</button>
     </div>
-  )
-}
+  );
+};
 
-export default CustomButton
+export default Content;

@@ -6,13 +6,13 @@
     "./**/*.ts",
     "./**/*.tsx",
     "background/index.ts",
-    "popup.jsx",
-    "content.tsx"
+    "popup.tsx",
+    "content.tsx",
   ],
   "compilerOptions": {
     "paths": {
-      "~*": ["./*"]
+      "~*": ["./*"],
     },
-    "baseUrl": "."
-  }
+    "baseUrl": ".",
+  },
 }

@@ -1,5 +1,5 @@
-const getCounterValue = (counter) => {
-  return counter
-}
+const getCounterValue = (counter: number): number => {
+  return counter;
+};
 
-export default getCounterValue
+export default getCounterValue;

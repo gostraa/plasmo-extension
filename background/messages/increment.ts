@@ -1,5 +1,5 @@
-const increment = (counter) => {
-  return counter + 1
-}
+const increment = (counter: number): number => {
+  return counter + 1;
+};
 
-export default increment
+export default increment;
