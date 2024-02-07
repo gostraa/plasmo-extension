@@ -19,5 +19,5 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       });
     });
   });
-  chrome.runtime.sendMessage({ name: "counterUpdated", counter: counter });
+  // chrome.runtime.sendMessage({ name: "counterUpdated", counter: counter });
 });
