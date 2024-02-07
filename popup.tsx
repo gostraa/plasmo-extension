@@ -1,34 +1,40 @@
 import React, { useEffect, useState } from "react";
 import { sendToBackground } from "@plasmohq/messaging";
 
+import { PopupContainer } from "~components";
+import "./style.css";
 const Popup: React.FC = () => {
   const [count, setCount] = useState<number>(0);
 
-  useEffect(() => {
-    sendToBackground({
-      name: "getCounterValue",
-    }).then((response) => {
-      setCount(response.counter);
-    });
-
-    chrome.runtime.onMessage.addListener((message) => {
-      if (message.name === "counterUpdated") {
-        setCount(message.counter);
-      }
-    });
-  }, []);
-
-  const handleIncrement = () => {
-    sendToBackground({ name: "increment" }).then((response) => {
+  const updateCounter = (messageName) => {
+    sendToBackground({ name: messageName }).then((response) => {
       setCount(response.counter);
     });
   };
 
+  useEffect(() => {
+    updateCounter("getCounterValue");
+
+    const messageListener = (message: any) => {
+      if (message.name === "counterUpdated") {
+        setCount(message.counter);
+      }
+    };
+
+    chrome.runtime.onMessage.addListener(messageListener);
+
+    return () => {
+      chrome.runtime.onMessage.removeListener(messageListener);
+    };
+  }, []);
+
+  const handleIncrement = () => updateCounter("increment");
+
   return (
-    <div>
+    <PopupContainer>
       <p>Count: {count}</p>
       <button onClick={handleIncrement}>Increment</button>
-    </div>
+    </PopupContainer>
   );
 };
 

@@ -1,14 +1,13 @@
-import getCounterValue from "./messages/getCounterValue";
-import increment from "./messages/increment";
+export {};
 
 let counter: number = 0;
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.name === "increment") {
-    counter = increment(counter);
+    counter++;
     sendResponse({ counter });
   } else if (request.name === "getCounterValue") {
-    sendResponse({ counter: getCounterValue(counter) });
+    sendResponse({ counter: counter });
   }
 
   chrome.tabs.query({}, (tabs) => {
@@ -19,5 +18,5 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       });
     });
   });
-  // chrome.runtime.sendMessage({ name: "counterUpdated", counter: counter });
+  //   chrome.runtime.sendMessage({ name: "counterUpdated", counter: counter });
 });
