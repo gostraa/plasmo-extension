@@ -1,28 +1,41 @@
 import React, { useEffect, useState } from "react";
 import { sendToBackground } from "@plasmohq/messaging";
-import { ContentContainer } from "~components";
-import "./style.css";
+
 import type { PlasmoCSConfig } from "plasmo";
+import styleText from "data-text:./style.css";
+import type { PlasmoGetStyle } from "plasmo";
+
+export const getStyle: PlasmoGetStyle = () => {
+  const style = document.createElement("style");
+  style.textContent = styleText;
+  return style;
+};
 
 export const config: PlasmoCSConfig = {
-  matches: ["https://www.plasmo.com/"],
+  matches: ["https://www.plasmo.com/*"],
 };
 
 const Content: React.FC = () => {
   const [count, setCount] = useState<number>(0);
 
   const updateCounter = (messageName) => {
-    sendToBackground({ name: messageName }).then((response) => {
-      setCount(response.counter);
+    sendToBackground({ name: messageName }).then(({ counter }) => {
+      setCount(counter);
     });
   };
 
   useEffect(() => {
     updateCounter("getCounterValue");
 
-    const messageListener = (message: any) => {
-      if (message.name === "counterUpdated") {
-        setCount(message.counter);
+    const messageListener = ({
+      name,
+      counter,
+    }: {
+      name: string;
+      counter: number;
+    }) => {
+      if (name === "counterUpdated") {
+        setCount(counter);
       }
     };
 
@@ -36,12 +49,14 @@ const Content: React.FC = () => {
   const handleIncrement = () => updateCounter("increment");
 
   return (
-    <ContentContainer>
-      <p>
-        Count: <span>{count}</span>
+    <div className="counter-container">
+      <p className="count-text">
+        Count: <span className="count-number">{count}</span>
       </p>
-      <button onClick={handleIncrement}>Increment</button>
-    </ContentContainer>
+      <button className="increment-button" onClick={handleIncrement}>
+        Increment
+      </button>
+    </div>
   );
 };
 
